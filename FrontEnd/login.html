@@ -10,7 +10,7 @@
 	<meta name="description" content="">
 	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script type="module" src="login.js" defer></script>
+	<script type="module" src="login.js"></script>
 </head>
 <body>
 <header class="header-login">
@@ -25,13 +25,13 @@
 	</nav>
 </header>
 <main>
-	<section id="contact">
+	<section id="modifyWorks">
 		<h2>Log In</h2>
-		<form action="#" method="post">
+		<form id="modifyWorksForm" action="#" method="post">
 			<label for="email">Email</label>
-			<input type="email" name="email" id="email">
+			<input type="email" name="email" id="email" value="sophie.bluel@test.tld">
             <label for="password">Mot de passe</label>
-			<input type="password" name="password" id="password">
+			<input type="password" name="password" id="password" value="S0phie">
 			<input type="submit" value="Se connecter">
 		</form>
         <a href="" class="link-forget-pwd">Mot de passe oublié</a>

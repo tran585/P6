@@ -48,6 +48,7 @@ table {
 }
 /** end reset css**/
 body {
+	position: relative;
 	max-width: 1140px;
 	margin:auto;
 	font-family: 'Work Sans' ;
@@ -88,16 +89,16 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
 
-li:hover {
-	color: #B1663C;
+nav li:hover {
+	font-weight: 700;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -163,32 +164,34 @@ li:hover {
 
 .gallery img {
 	width: 100%;
+	height: 489px;
 }
 
-#contact {
+#contact, #modifyWorks {
 	width: 33.247%;
 	margin: auto;
 }
-#contact > * {
+#contact, #modifyWorks > * {
 	text-align: center;
 }
-#contact h2{
+#contact h2, #modifyWorks h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form, #modifyWorks form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input, #modifyWorks input {
 	height: 36px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+#contact label,
+#modifyWorks label  {
 	margin: 2em 0 1em 0;
 }
 #contact textarea {
@@ -207,10 +210,30 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+input[type="submit"]:hover {
+	background: #0E2F28;
+}
+
 /* Css login page */
 
+#Mode-Edition {
+	background-color: black;
+	height: 59px;
+	margin-bottom: -12px;
+	color: white;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 11.42px;
+	display: none;
+}
 .header-login {
 	margin: 50px 0 150px 0;
+}
+
+#modifyWorks .link-forget-pwd {
+	color: black;
 }
 
 .footer-login {
@@ -244,4 +267,193 @@ footer nav ul {
 	#contact {
 		width: 50%;
 	}
+}
+
+
+.modal {
+	position: absolute ;
+	display: none;
+	background: rgba(0, 0, 0, 0.30);
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+}
+
+.modal .fa-xmark {
+	font-size: 24px;
+	position: absolute;
+	top: 26px;
+	right: 30px;
+}
+
+.modal .fa-arrow-left {
+	font-size: 21px;
+	position: absolute;
+	top: 26px;
+	left: 30px;
+}
+
+.modal .fa-trash-can {
+	position: absolute;
+	top: 6px;
+	right: 5px;
+	padding: 3px 4px;
+	border-radius: 2px;
+	color: #FFF;
+	background-color: #000;
+}
+
+.windows-Modal-Content h2 {
+	font-size: 26px;
+	font-family: 'Work Sans';
+	color: #000;
+	font-weight: 400;
+	margin-bottom: 46px;
+	margin-top: 60px;
+}
+
+.modal .windows-Modal-Content {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #FFF;
+	width: 630px;
+	height: 688px;
+	top: 16%;
+	border-radius: 10px;
+}
+
+.gallery-Modal {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 9px;
+	grid-row-gap: 27px;
+	width: 70%;
+	padding-bottom: 67.3px;
+	border-bottom: 1px #B3B3B3 solid;
+}
+
+.gallery-Modal figure {
+	position: relative;
+}
+
+.gallery-Modal img {
+	width: 100%;
+	height: 102px;
+}
+
+.windows-Modal-Content button {
+	height: 36px;
+	font-size: 14px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin-top: 38px;
+	width: 237px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+.windows-Modal-Content button:hover {
+	background-color: #0E2F28;
+}
+
+.form-Add-Picture {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	padding-bottom: 62.3px;
+	border-bottom: 1px #B3B3B3 solid;
+}
+
+.form-Add-Picture .select-Picture-Container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: #E8F1F6;
+	height: 169px;
+	border-radius: 3px;
+	margin-bottom: 30px;
+}
+
+.select-Picture-Container img {
+	height: 76px;
+	width: 76px;
+}
+
+.select-Picture-Container input {
+	display: none;
+}
+
+.select-Picture-Container label {
+	border-radius: 50px;
+	background: #CBD6DC;
+	width: 173px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #306685;
+	font-weight: 500;
+	margin-top: 7px;
+}
+
+.select-Picture-Container p {
+	font-size: 10px;
+	color: #444;
+	margin-bottom: 19px;
+	margin-top: 8px;
+}
+.form-Add-Picture input, .form-Add-Picture select {
+	background-color: #FFF;
+	border: 1px #FFF solid;
+	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+	height: 51px;
+	color: #444;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.form-Add-Picture input[type="text"] {
+	margin-top: 10px;
+	margin-bottom: 21px;
+}
+
+.form-Add-Picture select {
+	margin-top: 10px;
+}
+
+.form-Add-Picture select option {
+	background-color: #FFF;
+	color: white;
+}
+
+.form-Add-Picture button {
+	background-color: #A7A7A7;
+	position: absolute;
+	left: 195px;
+	bottom: 50px;
+}
+
+.select-Picture-Container .imgSelect {
+	width: 129px;
+	object-fit: cover;
+	height: 100%;
+}
+
+.select-Picture-Container .label-Select-Img {
+	opacity: 0;
+	width: 129px;
+	height: 100%;
+	position: absolute;
+}
+
+.select-Picture-Container .text-Select-Img {
+	display: none;
 }
