@@ -1,113 +1,100 @@
-let travaux = window.localStorage.getItem("travaux")
+import { linkNavFunction, setStyle, getElement } from "./utils.js";
+let works = window.localStorage.getItem("works")
 
-if(travaux === null) {
-    const reponse = await fetch('http://localhost:5678/api/works')
-    travaux = await reponse.json()
-    window.localStorage.setItem("travaux", JSON.stringify(travaux))
+if(works === null) {
+    const response = await fetch('http://localhost:5678/api/works')
+    works = await response.json()
+    window.localStorage.setItem("works", JSON.stringify(works))
 }
 else {
-    travaux = JSON.parse(travaux)
+    works = JSON.parse(works)
 }
 
-function genererTravaux(travaux) {
-    travaux.forEach((element) => {
+function generateModalWorks(works, selectHtmlTag) {
+    generationWorks(selectHtmlTag) //function to add div gallery-modal
+    works.forEach((element) => {
 
-        const baliseParent = document.querySelector(".gallery")
-        const balisesFigure = document.createElement("figure") // refaire syntaxe (innerHTML) + setstyle
+        const figureTag = document.createElement("figure")
         const imgGalery = document.createElement("img")
-        const balisesFigcaption = document.createElement("figcaption")
-        baliseParent.appendChild(balisesFigure)
-        balisesFigure.appendChild(imgGalery)
-        balisesFigure.appendChild(balisesFigcaption)
-        
+        getElement(selectHtmlTag).appendChild(figureTag)
+        figureTag.appendChild(imgGalery)
+        if(selectHtmlTag === ".gallery-modal") {
+            const figcaptionTag = document.createElement("i")
+            figureTag.appendChild(figcaptionTag)
+            figcaptionTag.classList.add("fa-solid", "fa-trash-can")
+            deleteWorks()
+        }
+        else {
+            const figcaptionTag = document.createElement("figcaption")
+            figureTag.appendChild(figcaptionTag)
+            figcaptionTag.innerText = element.title
+        }
         imgGalery.src = element.imageUrl
-        balisesFigure.userId = element.userId
-        balisesFigure.id = element.id
-        balisesFigure.categoryId = element.categoryId
+        figureTag.userId = element.userId
+        figureTag.id = element.id
+        figureTag.categoryId = element.categoryId
+        figureTag.category = element.category
         imgGalery.alt = element.title
-        balisesFigcaption.innerText = element.title
     })
 }
 
-genererTravaux(travaux)
+generateModalWorks(works, ".gallery-modal")
+generateModalWorks(works, ".gallery")
+linkNavFunction()
 
-function genererTravauxModal(travaux) {
-    generationWorks()
-    travaux.forEach((element) => {
+// create filter content works  // create filter content works
 
-        const baliseParent = document.querySelector(".gallery-Modal")
-        const balisesFigure = document.createElement("figure") // refaire syntaxe (innerHTML) + setstyle
-        const imgGalery = document.createElement("img")
-        const balisesFigcaption = document.createElement("i")
-        baliseParent.appendChild(balisesFigure)
-        balisesFigure.appendChild(imgGalery)
-        balisesFigure.appendChild(balisesFigcaption)
+let buttonFilter = document.createElement("button")
+getElement(".filter-content").appendChild(buttonFilter)
+buttonFilter.innerText = "Tous"
+let getFilter = window.localStorage.getItem("categorie")
+if(getFilter === null) {
+    getFilter = await (await fetch("http://localhost:5678/api/categories")).json()
+    window.localStorage.setItem("categorie", JSON.stringify(getFilter))
+}
+else {
+    getFilter = JSON.parse(getFilter)
+}
 
-        
-        imgGalery.src = element.imageUrl
-        balisesFigure.userId = element.userId
-        balisesFigure.id = element.id
-        balisesFigure.categoryId = element.categoryId
-        imgGalery.alt = element.title
-        balisesFigcaption.classList.add("fa-solid", "fa-trash-can")
+getFilter.forEach((element) => {
+    buttonFilter = document.createElement("button")
+    getElement(".filter-content").appendChild(buttonFilter)
+    buttonFilter.innerText = element.name
+    buttonFilter.id = element.id
+})
+
+getElement(".filter-content button", "All").forEach((buttonsClick) => {
+    buttonsClick.addEventListener("click", (event) => {
+        if(event.target.innerText === "Tous") {
+            generateModalWorks(works, ".gallery")
+        }
+        else {
+            const filterWorks = works.filter((index) => {return index.categoryId == event.target.id})
+            generateModalWorks(filterWorks, ".gallery")
+        }
     })
-    AddPictureFunction()
-    recup()// renomage
-}
-genererTravauxModal(travaux)
-
-
-function createButtonsFilter() {
-    let buttonFilter = document.createElement("button")
-    document.querySelector(".filter-content").appendChild(buttonFilter)
-    buttonFilter.innerText = "Tous"
-    const nameCategoryFilter = travaux.map(travaux => travaux.category.name).filter((value, index, self) => { return self.indexOf(value) === index})
-    for(let i = 0; i < nameCategoryFilter.length; i++) {
-        const idCategoryFilter = travaux.map(travaux => travaux.category.id).filter((value, index, self) => { return self.indexOf(value) === index})
-        buttonFilter = document.createElement("button")
-        document.querySelector(".filter-content").appendChild(buttonFilter)
-        buttonFilter.innerText = nameCategoryFilter[i]
-        buttonFilter.id = idCategoryFilter[i]
-    }
-}
-createButtonsFilter()
-
-function filterCategory() {
-    document.querySelectorAll(".filter-content button").forEach((buttonsClick) => {
-        buttonsClick.addEventListener("click", (event) => {
-            document.querySelector(".gallery").innerHTML= ""
-            if(event.target.innerText === "Tous") {
-                genererTravaux(travaux)
-            }
-            else {
-                const filterTravaux = travaux.filter((index) => {return index.categoryId == event.target.id})
-                genererTravaux(filterTravaux)
-            }
-        })
-    })
-}
-
-filterCategory()
+})
+// create filter content works  / END / create filter content works
 
 
 /// Mode Admin /// Mode Admin /// Mode Admin
 let getInformation = window.localStorage.getItem("user-Sophie")
 getInformation = JSON.parse(getInformation)
-if(getInformation.token) {
-    document.getElementById("Mode-Edition").style.display = "flex" //mettre setStyle function
-    GetElement("#portfolio .filter-content").style.display = "none" //idem
-    GetElement("ul .login").innerText= "logout" //idem
-    const test = `<div class="modifier-Container">
+if (getInformation && getInformation.token) {
+    getElement("Mode-Edition", "Id").style.display = "flex"
+    getElement("#portfolio .filter-content").style.display = "none"
+    getElement("ul .login").innerText= "logout"
+    const test = `<div class="modifier-container">
                     <div>
                         <i class="fa-regular fa-pen-to-square"></i>      
                         <span>modifier</span>
                     </div>
                 </div>`; //renommer test!! ///////////
     // -insertion de la div container dans section (#portfolio)
-    document.getElementById("portfolio").insertAdjacentHTML("afterbegin", test) //rename test
+    getElement("portfolio", "Id").insertAdjacentHTML("afterbegin", test) //rename test
     // -insertion balsie H2 (baliseH2Portfolio) dans div
-    GetElement(".modifier-Container").insertAdjacentElement("afterbegin", document.querySelector("#portfolio h2"))
-    setStyle(".modifier-Container", { 
+    getElement(".modifier-container").insertAdjacentElement("afterbegin", getElement("#portfolio h2"))
+    setStyle(".modifier-container", {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -115,66 +102,53 @@ if(getInformation.token) {
     margin: "51px"})
     setStyle("#portfolio h2", {
         marginBottom: "0px"})
+    //Active Modal with logo/btn modifier
+    getElement(".modifier-container div").addEventListener("click", () => {
+        getElement("myModal", "Id").style.display= "flex"
+    })
 }
 
-//For logout user click 
-GetElement("ul .login").addEventListener("click", (event) => {
-    if(event.target.innerText === "logout") {
-        window.location.href =("index.html")
-        window.localStorage.removeItem("user-Sophie")
-    }
-})
-
-//Active Modal with logo/btn modifier
-GetElement(".modifier-Container div").addEventListener("click", () => {
-    GetElement("myModal", "Id").style.display= "flex"
-})
-
-
-
-//desactive Modal 
+//desactive Modal
 window.addEventListener("click", (event) => {
-    if(event.target === document.getElementById("myModal")) {
-        GetElement("myModal", "Id").style.display= "none"
+    if(event.target === getElement("myModal", "Id")) {
+        getElement("myModal", "Id").style.display= "none"
     }
 })
 
-function recup() {
-    GetElement(".fa-trash-can", "All").forEach(async (index) => {
+function deleteWorks() {
+    getElement(".fa-trash-can", "All").forEach(async (index) => {
         index.addEventListener("click", async (event) => {
-
-            const deleteTravaux = await fetch(`http://localhost:5678/api/works/${event.target.parentElement.id}`, {
+            const deleteWorks = await fetch(`http://localhost:5678/api/works/${event.target.parentElement.id}`, {
                 method: "DELETE",
                 headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${getInformation.token}`
             }
             })
-            if(deleteTravaux.ok) {
-                const newTravaux = travaux.filter((element) => {
+            if(deleteWorks.ok) {
+                const newWorks = works.filter((element) => {
                     return element.id != event.target.parentElement.id
                 })
-                GetElement(".gallery").innerHTML = ""
-                GetElement(".gallery-Modal").innerHTML = ""
-                window.localStorage.setItem("travaux", JSON.stringify(newTravaux))
-                travaux = window.localStorage.getItem("travaux")
-                travaux = JSON.parse(travaux)
-                genererTravaux(travaux)
-                genererTravauxModal(travaux)
+                window.localStorage.setItem("works", JSON.stringify(newWorks))
+                works = window.localStorage.getItem("works")
+                works = JSON.parse(works)
+                generateModalWorks(works, ".gallery")
+                generateModalWorks(works, ".gallery-modal")
             }
         })
     })
 }
 
+
 // Create Form// Create Form// Create Form
 function AddPictureFunction() {
-    GetElement(".windows-Modal-Content button").addEventListener("click", (event) => {
+    getElement(".windows-modal-content button").addEventListener("click", () => {
         const GenerateFormModal = `
         <i class="fa-solid fa-xmark"></i>
         <i class="fa-solid fa-arrow-left"></i>
         <h2>Ajout photo</h2>
-        <form class="form-Add-Picture" enctype="multipart/form-data" method="post" action="#">
-            <div class="select-Picture-Container">
+        <form class="form-add-picture" enctype="multipart/form-data" method="post" action="#">
+            <div class="select-picture-container">
                 <img src="/assets/svg/picture-svgrepo-com 1.svg" alt="svg-White-Background">
                 <input type="file" name="image" id="image" accept="image/png, image/jpeg">
                 <label for="image">+ Ajouter photo</label>
@@ -191,31 +165,30 @@ function AddPictureFunction() {
             </select>
             <button>Valider</button>
         </form>`
-        GetElement(".windows-Modal-Content").innerHTML= GenerateFormModal
-        selectNewPicture()
-        cancelSubmitForm()
+        getElement(".windows-modal-content").innerHTML= GenerateFormModal
         buttonArrowXmark()
+        SendSubmitForm()
+        selectNewPicture()
     })
 }
 // Create Form// END// END // Create Form// Create Form// END// END
 
-
 //FormData//FormData//FormData//FormData//FormData//FormData//FormData
 
-function cancelSubmitForm() {
-    GetElement(".form-Add-Picture").addEventListener("submit",async (event) => {
+function SendSubmitForm() { //rename function
+    getElement(".form-add-picture").addEventListener("submit",async (event) => {
         event.preventDefault()
-        const dataForm = GetElement(".form-Add-Picture")
+        const dataForm = getElement(".form-add-picture")
         const formData = new FormData(dataForm)
-        const inputPicture = GetElement(".select-Picture-Container input")
-        const selectPictureCategorie = GetElement(".form-Add-Picture select").value
-        const inputText = GetElement(`.form-Add-Picture input[type="text"]`).value
+        const inputPicture = getElement(".select-picture-container input")
+        const selectPictureCategorie = getElement(".form-add-picture select").value
+        const inputText = getElement(`.form-add-picture input[type="text"]`).value
 
         if(inputPicture.files.length === 0 || selectPictureCategorie === "" || inputText === "") {
             alert("erreur dans le formulaire")
         }
         else {
-            setStyle(".form-Add-Picture button", {
+            setStyle(".form-add-picture button", {
                 backgroundColor: "#1D6154",
             })
         }
@@ -226,81 +199,58 @@ function cancelSubmitForm() {
                 "Authorization": `Bearer ${getInformation.token}`,
             }
         })
-        const GetFormReponse = await sendForm.json()
-        console.log(GetFormReponse)
+        const GetFormResponse = await sendForm.json() //
         if(sendForm.ok) {
-            travaux.push(GetFormReponse)
-            GetElement(".gallery").innerHTML = ""
-            genererTravaux(travaux)
-            genererTravauxModal(travaux)
+            works.push(GetFormResponse)
+            window.localStorage.setItem("works", JSON.stringify(works))
+            works = window.localStorage.getItem("works")
+            works = JSON.parse(works)
+            generateModalWorks(works, ".gallery")
+            generateModalWorks(works, ".gallery-modal")
         }
     })
 }
 
-
-console.log(travaux)
-
-
-
-//Fonction//Fonction//Fonction//Fonction//Fonction//Fonction//Fonction
-
 function selectNewPicture() {
-    GetElement(".select-Picture-Container input").addEventListener("change", (event) => {
+    getElement(".select-picture-container input").addEventListener("change", (event) => {
         if(event.target.files) {
             const EventInputPicture = event.target.files[0]
             const getPictureUrl = URL.createObjectURL(EventInputPicture)
-            GetElement(".select-Picture-Container img").src = getPictureUrl
-            GetElement(".select-Picture-Container img").classList.add("imgSelect")
-            GetElement(".select-Picture-Container label").classList.add("label-Select-Img")
-            GetElement(".select-Picture-Container p").classList.add("text-Select-Img")
+            getElement(".select-picture-container img").src = getPictureUrl
+            getElement(".select-picture-container img").classList.add("imgSelect")
+            getElement(".select-picture-container label").classList.add("label-Select-Img")
+            getElement(".select-picture-container p").classList.add("text-Select-Img")
         }
     })
 }
 
-
-
 function buttonArrowXmark() {
-    GetElement(".windows-Modal-Content .fa-solid", "All").forEach((element) =>{
+    getElement(".windows-modal-content .fa-solid", "All").forEach((element) =>{
         element.addEventListener("click", (event) => {
             if(event.target.className === "fa-solid fa-xmark") {
-                GetElement("myModal", "Id").style.display = "none";
+                getElement("myModal", "Id").style.display = "none";
             }
             else if (event.target.className === "fa-solid fa-arrow-left") {
-            genererTravauxModal(travaux)
-            buttonArrowXmark()
-            AddPictureFunction()
+                generateModalWorks(works, ".gallery-modal")
             }
         })
     })
 }
 
-function generationWorks() {
-    const generationWorks = `
-    <div class="windows-Modal-Content">
-        <i class="fa-solid fa-xmark"></i>
-        <h2>Galerie photo</h2>
-        <div class="gallery-Modal"></div>
-        <button>Ajouter une photo</button>
-    </div>`
-GetElement("myModal", "Id").innerHTML= generationWorks
-buttonArrowXmark()
-}
-
-function GetElement(selectorName, type) { //Get
-    let GetElement = document.querySelector(selectorName)
-    switch (type) {
-        case "Id": 
-        GetElement = document.getElementById(selectorName)
-            break
-        case "All": 
-        GetElement = document.querySelectorAll(selectorName)
+function generationWorks(test) {
+    if(test === ".gallery") {
+        getElement(".gallery").innerHTML = ""
     }
-    return GetElement 
-}
-
-function setStyle(selector, styles) {
-    const element = document.querySelector(selector);
-    if (element) {
-      Object.assign(element.style, styles);
+    else {
+        const generationWorks = `
+        <div class="windows-modal-content">
+            <i class="fa-solid fa-xmark"></i>
+            <h2>Galerie photo</h2>
+            <div class="gallery-modal"></div>
+            <button>Ajouter une photo</button>
+        </div>`
+    getElement("myModal", "Id").innerHTML= generationWorks
+    AddPictureFunction()
+    buttonArrowXmark()
     }
 }

@@ -1,22 +1,13 @@
-
-document.querySelector(".login").addEventListener("click", () => {
-    window.location.href =("login.html")
-})
-document.querySelector(".project").addEventListener("click", () => {
-    window.location.href =("index.html")
-})
-
-
+import { linkNavFunction, getElement } from "./utils.js";
 
 function loginUsers() {
-    const form = document.querySelector("form") //Recréer balise Form
-    const baliseAlert = document.createElement("p")
-    const baliseForm = document.querySelector("form")// double balise?
-    form.addEventListener("submit", async (event) => {
+    const tagAlert = document.createElement("p")
+    const tagForm = getElement("modifyWorksForm", "Id")
+    tagForm.addEventListener("submit", async (event) => {
         event.preventDefault()
         const loginUser = {
-            email: document.querySelector("form input[type=email]").value,
-            password: document.querySelector("form input[type=password]").value
+            email: getElement("#modifyWorksForm input[type=email]").value,
+            password: getElement("#modifyWorksForm input[type=password]").value
         }
         const chargeUtile = JSON.stringify(loginUser)
         const sendLoginUsers = await fetch("http://localhost:5678/api/users/login/", {
@@ -29,11 +20,11 @@ function loginUsers() {
             window.location.href=("index.html")
         }
         else {
-            baliseForm.appendChild(baliseAlert)
-            baliseAlert.innerText = "Votre adresse e-mail ou mot de passe est incorrect"
+            tagForm.appendChild(tagAlert)
+            tagAlert.innerText = "Votre adresse e-mail ou mot de passe est incorrect"
             alert("Votre adresse e-mail ou mot de passe est incorrect")
         }
     })
 }
-
 loginUsers()
+linkNavFunction()
