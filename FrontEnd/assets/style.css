@@ -95,7 +95,7 @@ nav li {
 	font-size: 1.2em;
 }
 
-nav li:hover {
+header nav li:hover {
 	font-weight: 700;
 }
 
@@ -167,31 +167,37 @@ nav li:hover {
 	height: 489px;
 }
 
-#contact, #modifyWorks {
+#contact, #login-section {
 	width: 33.247%;
 	margin: auto;
 }
-#contact, #modifyWorks > * {
+#contact, #login-section > * {
 	text-align: center;
 }
-#contact h2, #modifyWorks h2{
+#login-section h1 {
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 30px;
+	color: #1D6154
+}
+#contact h2, #login-section h1{
 	margin-bottom: 20px;
 }
-#contact form, #modifyWorks form {
+#contact form, #login-section form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input, #modifyWorks input {
+#contact input, #login-section input {
 	height: 36px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 #contact label,
-#modifyWorks label  {
+#login-section label  {
 	margin: 2em 0 1em 0;
 }
 #contact textarea {
@@ -216,7 +222,15 @@ input[type="submit"]:hover {
 
 /* Css login page */
 
-#Mode-Edition {
+.modifier-container-activated {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 31px;
+    margin: 51px;
+}
+
+#mode-edition {
 	background-color: black;
 	height: 59px;
 	margin-bottom: -12px;
@@ -232,7 +246,7 @@ input[type="submit"]:hover {
 	margin: 50px 0 150px 0;
 }
 
-#modifyWorks .link-forget-pwd {
+#login-section .link-forget-pwd {
 	color: black;
 }
 
@@ -313,7 +327,7 @@ footer nav ul {
 }
 
 .modal .windows-modal-content {
-	position: relative;
+	position: fixed;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -435,25 +449,40 @@ footer nav ul {
 }
 
 .form-add-picture button {
-	background-color: #A7A7A7;
+	background-color: #1D6154;
 	position: absolute;
 	left: 195px;
 	bottom: 50px;
 }
 
-.select-picture-container .imgSelect {
+.no-hover {
+	background-color: #A7A7A7 !important;
+}
+
+.select-picture-container .img-select {
 	width: 129px;
 	object-fit: cover;
 	height: 100%;
+	position: absolute;
 }
 
-.select-picture-container .label-Select-Img {
+.select-picture-container .label-select-img {
 	opacity: 0;
 	width: 129px;
 	height: 100%;
 	position: absolute;
+	z-index: 1;
 }
 
 .select-picture-container .text-Select-Img {
 	display: none;
 }
+
+.form-add-picture span {
+	color: red;
+	padding: 5px;
+	margin-top: 10px;
+	position: absolute;
+	top: 73.5%;
+}
+

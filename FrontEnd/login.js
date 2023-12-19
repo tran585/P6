@@ -1,13 +1,13 @@
-import { linkNavFunction, getElement } from "./utils.js";
+import { linkNavFunction, getElement, setStyle } from "./utils.js";
 
 function loginUsers() {
-    const tagAlert = document.createElement("p")
-    const tagForm = getElement("modifyWorksForm", "Id")
+    const tagAlert = document.createElement("span")
+    const tagForm = getElement("login-form", "id")
     tagForm.addEventListener("submit", async (event) => {
         event.preventDefault()
         const loginUser = {
-            email: getElement("#modifyWorksForm input[type=email]").value,
-            password: getElement("#modifyWorksForm input[type=password]").value
+            email: getElement("#login-form input[type=email]").value,
+            password: getElement("#login-form input[type=password]").value
         }
         const chargeUtile = JSON.stringify(loginUser)
         const sendLoginUsers = await fetch("http://localhost:5678/api/users/login/", {
@@ -15,16 +15,29 @@ function loginUsers() {
             body: chargeUtile,
             headers: {"Content-Type": "application/json"}
         })
-        if (sendLoginUsers.ok) {
-            window.localStorage.setItem("user-Sophie", JSON.stringify(await sendLoginUsers.json()))
-            window.location.href=("index.html")
+        try {
+            if (sendLoginUsers.ok) {
+                window.localStorage.setItem("userAdmin", JSON.stringify(await sendLoginUsers.json()))
+                window.location.href=("index.html")
+            }
+            else if (!sendLoginUsers.ok) {
+                tagForm.appendChild(tagAlert)
+                getElement("#login-form input[type=password]").insertAdjacentElement("afterend", tagAlert)
+                setStyle("#login-form span", {
+                    color: "red",
+                    padding: "5px",
+                })
+                throw new Error("Les identifiants que vous avez saisis (e-mail ou mot de passe) ne sont pas reconnus. Veuillez réessayer.")
+            }
         }
-        else {
-            tagForm.appendChild(tagAlert)
-            tagAlert.innerText = "Votre adresse e-mail ou mot de passe est incorrect"
-            alert("Votre adresse e-mail ou mot de passe est incorrect")
+        catch (erreur) {
+            tagAlert.innerText = erreur.message
+            setTimeout(() =>{
+                tagAlert.innerText = ""
+            }, 6000)
         }
     })
 }
+
 loginUsers()
 linkNavFunction()
