@@ -51,7 +51,7 @@ export function generationTags(tagsChoice) {
             <div class="gallery-modal"></div>
             <button>Ajouter une photo</button>
         </div>`
-    getElement("myModal", "id").innerHTML= generationWorks
+    getElement("my-modal", "id").innerHTML= generationWorks
     }
     else if(tagsChoice === "modalAddPicture") {
         const generateFormModal = `

@@ -77,16 +77,22 @@ getElement(".filter-content button", "all").forEach((buttonsClick) => { // Event
 // Mode Admin /// Mode Admin /// Mode Admin // Mode Admin /// Mode Admin /// Mode Admin
 let getInformation = JSON.parse(window.localStorage.getItem("userAdmin"))
 if (getInformation && getInformation.token) {
-    getElement("mode-edition", "id").style.display = "flex" //active div #mode-edition
     getElement("#portfolio .filter-content").style.display = "none" //filter main page disabled
     getElement("ul .login").innerText= "logout"
-    const generateTags = `<div class="modifier-container">
+    const generateTags = `<div id="my-modal" class="modal">
+                        </div>
+                        <div id="mode-edition"> 
+                            <p><i class="fa-regular fa-pen-to-square"></i> Mode édition</p>
+                        </div>`
+    const buttonModifierTag = `<div class="modifier-container">
                     <div>
                     <span><i class="fa-regular fa-pen-to-square"></i>      
                         modifier</span></div>
                 </div>`;
     // -insertion div tag container in section (#portfolio)
-    getElement("portfolio", "id").insertAdjacentHTML("afterbegin", generateTags) // add button modifier
+    getElement("body").insertAdjacentHTML("afterbegin", generateTags)
+    getElement("mode-edition", "id").style.display = "flex" //active div #mode-edition
+    getElement("portfolio", "id").insertAdjacentHTML("afterbegin", buttonModifierTag) // add button modifier
     getElement(".modifier-container").insertAdjacentElement("afterbegin", getElement("#portfolio h2"))//insert h2 tag after div (modifier-container )
     getElement(".modifier-container").classList.add("modifier-container-activated")// add new class for CSS (flex, gap...)
     setStyle("#portfolio h2", {marginBottom: "0px"})
@@ -95,11 +101,11 @@ if (getInformation && getInformation.token) {
 
 //Active && desactive Modal (windows)
 window.addEventListener("click", (event) => {
-    if(event.target === getElement("myModal", "id")) {
-        getElement("myModal", "id").style.display= "none"
+    if(event.target === getElement("my-modal", "id")) {
+        getElement("my-modal", "id").style.display= "none"
     }
     else if(event.target === getElement(".modifier-container span") || event.target === getElement("#mode-edition p")) {
-        getElement("myModal", "id").style.display= "flex"
+        getElement("my-modal", "id").style.display= "flex"
     }
 })
 
@@ -242,7 +248,7 @@ export function buttonArrowXmark() {
     getElement(".windows-modal-content .fa-solid", "all").forEach((element) =>{
         element.addEventListener("click", (event) => {
             if(event.target.className === "fa-solid fa-xmark") {
-                getElement("myModal", "id").style.display = "none";
+                getElement("my-modal", "id").style.display = "none";
             }
             else if (event.target.className === "fa-solid fa-arrow-left") {
                 generateGalleryWorks(works, ".gallery-modal")
