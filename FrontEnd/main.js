@@ -18,27 +18,27 @@ function generateGalleryWorks(works, selectHtmlTag) { //generation for gallery M
         getElement(selectHtmlTag).appendChild(figureTag)
         figureTag.appendChild(imgGalery)
         if(selectHtmlTag === ".gallery-modal") {
-            const figcaptionTag = document.createElement("i")
-            figureTag.appendChild(figcaptionTag)
-            figcaptionTag.classList.add("fa-solid", "fa-trash-can")
+            const iconsDelete = document.createElement("i")
+            figureTag.appendChild(iconsDelete)
+            iconsDelete.classList.add("fa-solid","fa-trash-can")
+
+            figureTag.id = element.id
+            imgGalery.src = element.imageUrl
+            imgGalery.alt = element.title
+            figureTag.category = element.category.name
             deleteWorks()
         }
         else {
             const figcaptionTag = document.createElement("figcaption")
             figureTag.appendChild(figcaptionTag)
             figcaptionTag.innerText = element.title
+            imgGalery.alt = element.title
+            imgGalery.src = element.imageUrl
+            figureTag.category = element.category.name
         }
-        imgGalery.src = element.imageUrl
-        figureTag.userId = element.userId
-        figureTag.id = element.id
-        figureTag.categoryId = element.categoryId
-        figureTag.category = element.category
-        imgGalery.alt = element.title
     })
 }
-
 generateGalleryWorks(works, ".gallery")
-
 // create filter content works  // create filter content works // create filter content works
 
 let buttonFilter = document.createElement("button") //create first btn & condition await/get by API
@@ -57,7 +57,6 @@ getFilter.forEach((element) => { // Create all buttons with iteration(name/id)
     buttonFilter = document.createElement("button")
     getElement(".filter-content").appendChild(buttonFilter)
     buttonFilter.innerText = element.name
-    buttonFilter.id = element.id
 })
 
 getElement(".filter-content button", "all").forEach((buttonsClick) => { // Event on all buttons category for filter
@@ -66,11 +65,12 @@ getElement(".filter-content button", "all").forEach((buttonsClick) => { // Event
             generateGalleryWorks(works, ".gallery")
         }
         else {
-            const filterWorks = works.filter((index) => {return index.categoryId == event.target.id})
+            const filterWorks = works.filter((index) => {return index.category.name === event.target.innerText})
             generateGalleryWorks(filterWorks, ".gallery")
         }
     })
 })
+
 // create filter content works  // END // create filter content works // END / create filter content works
 
 
@@ -216,12 +216,11 @@ function sendSubmitForm() {
                 body: formData,
                 headers: {"Authorization": `Bearer ${getInformation.token}`}
             })
-            const GetFormResponse = await sendForm.json()
             if(!sendForm.ok) {
                 console.error("Echec de la requête vers l'API")
             }
             else if(sendForm.ok) {
-                works.push(GetFormResponse)
+                works = await (await fetch('http://localhost:5678/api/works')).json()
                 window.localStorage.setItem("works", JSON.stringify(works))
                 works = window.localStorage.getItem("works")
                 works = JSON.parse(works)

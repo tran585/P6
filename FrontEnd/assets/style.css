@@ -30,6 +30,8 @@ footer, header, hgroup, menu, nav, section, a {
 }
 body {
 	line-height: 1;
+	font-family: 'Work Sans' ;
+	position: relative;
 }
 ol, ul {
 	list-style: none;
@@ -47,11 +49,10 @@ table {
 	border-spacing: 0;
 }
 /** end reset css**/
-body {
+.main-container {
 	position: relative;
-	max-width: 1140px;
+	max-width: 1440px;
 	margin:auto;
-	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
 header {
@@ -230,6 +231,7 @@ input[type="submit"]:hover {
     margin: 51px;
 }
 
+
 #mode-edition {
 	background-color: black;
 	height: 59px;
@@ -257,7 +259,7 @@ input[type="submit"]:hover {
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	padding: 2em;
 }
 
 /* Responsive */
@@ -286,6 +288,7 @@ footer nav ul {
 
 .modal {
 	position: absolute ;
+	z-index: 1;
 	display: none;
 	background: rgba(0, 0, 0, 0.30);
 	width: 100%;
@@ -327,7 +330,7 @@ footer nav ul {
 }
 
 .modal .windows-modal-content {
-	position: fixed;
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -441,11 +444,6 @@ footer nav ul {
 
 .form-add-picture select {
 	margin-top: 10px;
-}
-
-.form-add-picture select option {
-	background-color: #FFF;
-	color: white;
 }
 
 .form-add-picture button {
